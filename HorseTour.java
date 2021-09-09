@@ -6,15 +6,15 @@ public class HorseTour {
 	
 	private int hang[];
 	private int cot[];
-	private boolean cx[][];
-	private int a[][];
+	private boolean check[][];
+	private int matrix[][];
 	private int dem;
 	
-	public void Nhap() {
+	public void input() {
 		Scanner scan = new Scanner(System.in);
-		System.out.print("Nhap N = "); n = scan.nextInt();
-		System.out.print("Nhap x = "); x = scan.nextInt();
-		System.out.print("Nhap y = "); y = scan.nextInt();
+		System.out.print("Nhap kich co ban co n = "); n = scan.nextInt();
+		System.out.print("Nhap toa do x = "); x = scan.nextInt();
+		System.out.print("Nhap toa do y = "); y = scan.nextInt();
 		scan.close();
 	}
 	
@@ -31,54 +31,60 @@ public class HorseTour {
 		hang[6] = -1; cot[6] = -2;
 		hang[7] = -2; cot[7] = -1;
 				
-		cx = new boolean[n+4][n+4];
-		a = new int[n+4][n+4];
+		check = new boolean[n+4][n+4];
+		matrix = new int[n+4][n+4];
 		
 		int i, j;
 		
 		for (i=0; i<n+4; i++)
 			for (j=0; j<n+4; j++)
-				cx[i][j] = false;
+				check[i][j] = false;
 		
 		for (i=2; i<n+2; i++)
 			for (j=2; j<n+2; j++)
-				cx[i][j] = true;
+				check[i][j] = true;
 		
-		cx[x+1][y+1] = false;
-		a[x+1][y+1] = 1;
+		check[x+1][y+1] = false;
+		matrix[x+1][y+1] = 1;
 		dem = 0;
 	}
 	
-	public void InKQ() {
-		dem++;
-		System.out.println("Cach thu " + dem + ": ");
+	public void output() {
 		int i, j;
 		for (i=2; i<n+2; i++) {
-			for (j=2; j<n+2; j++) System.out.format("%3d ", a[i][j]);
+			for (j=2; j<n+2; j++) {
+				System.out.format("%3d ", matrix[i][j]);
+			}
 			System.out.println();
 		}
 	}
 	
-	public void Try2(int x0, int y0, int i) {
+	public void Try(int x0, int y0, int i) {
+		int x_first = x0;
+		int y_first = y0;
 		int j;
 		for (j=0; j<8; j++)
-			if (cx[x0+hang[j]][y0+cot[j]] == true) {
-				a[x0+hang[j]][y0+cot[j]] = i;
-				cx[x0+hang[j]][y0+cot[j]] = false;
-				if (i == n*n) InKQ();
-				else Try2(x0+hang[j], y0+cot[j], i+1);
-				cx[x0+hang[j]][y0+cot[j]] = true;
+			if (check[x0+hang[j]][y0+cot[j]] == true) {
+				matrix[x0+hang[j]][y0+cot[j]] = i;
+				check[x0+hang[j]][y0+cot[j]] = false;
+				if (i == n*n && x0==x_first && y0==y_first) {
+					output();
+					System.exit(0);
+				}
+				else Try(x0+hang[j], y0+cot[j], i+1);
+				check[x0+hang[j]][y0+cot[j]] = true;
 			}
 	}
 	
 	
 	
 	public static void main(String[] args) {
-		HorseTour t = new HorseTour();
-		t.Nhap();
-		t.Init();
-		t.Try2(t.x+1, t.y+1, 2);
-		if (t.dem == 0) System.out.println("Bai toan khong co nghiem");
+		HorseTour object = new HorseTour();
+		object.input();
+		object.Init();
+		object.Try(object.x+1, object.y+1, 2);
+		if (object.dem == 0) 
+			System.out.println("Bai toan khong co nghiem");
 	}
 
 }
